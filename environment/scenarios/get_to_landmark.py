@@ -13,9 +13,7 @@ class GetToLandmark:
         self.obs_size = 2
         self.act_size = 2
 
-        self.players = []
-        for _ in range(n_agents):
-            self.players.append(Player())
+        self.players = [Player(max_speed=vel_scale) for _ in range(n_agents)]
         self.landmark = Landmark()
 
         self.world = World(self.players, [self.landmark], size=world_size)
@@ -34,7 +32,10 @@ class GetToLandmark:
     def step(self, actions):
         # print(actions)
         for act, player in zip(actions, self.players):
-            player.vel = act * self.vel_scale
+            vel = act * self.vel_scale
+            if np.sqrt(np.sum(np.square(vel))) > self.vel_scale:
+                vel = vel / (np.sqrt(np.sum(np.square(vel))) * self.vel_scale)
+            player.vel = vel
 
         self.world.step()
 

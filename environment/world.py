@@ -17,7 +17,7 @@ class World:
     def step(self):
         for agent in self.players:
             agent.pos += agent.vel
-            # np.clip(agent.pos, agent.size, self.size - agent.size)
+            agent.pos = np.clip(agent.pos, agent.size, self.size - agent.size)
 
     def render(self):
         img = Image.new('RGB', (int(self.size), int(self.size)), color=(255, 255, 255))
@@ -27,3 +27,6 @@ class World:
         for player in self.players:
             d.ellipse(np.concatenate([player.pos - (player.size, player.size), player.pos + (player.size, player.size)]).tolist(), fill=player.color)
         return img
+
+    def get_normalized_pos(self, entity):
+        return entity.pos / self.size
